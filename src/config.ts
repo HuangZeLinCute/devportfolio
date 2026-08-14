@@ -1,91 +1,136 @@
 export const siteConfig = {
-  name: "Ryan Fitzgerald",
-  title: "Senior Software Engineer",
-  description: "Portfolio website of Ryan Fitzgerald",
-  accentColor: "#1d4ed8",
+  name: "黄泽霖",
+  title: "人工智能研究者 | 算法工程师",
+  description:
+    "黄泽霖的个人作品集，展示人工智能、计算机视觉、大语言模型与智能系统相关研究和项目。",
+  accentColor: "#2563eb",
+
   social: {
-    email: "your-email@example.com",
-    linkedin: "https://linkedin.com/in/yourprofile",
-    twitter: "https://x.com/rfitzio",
-    github: "https://github.com/RyanFitzgerald",
+    email: "zelin_huang@163.com",
+    github: "https://github.com/HuangZeLinCute",
+    kaggle: "https://www.kaggle.com/blueshyy",
   },
+
   aboutMe:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quos asperiores nihil consequatur tempore cupiditate architecto natus commodi corrupti quas quasi facere est, dignissimos odit nam veniam sapiente ut, vitae eligendi ipsum dolor, nostrum ullam impedit! Corrupti ratione mollitia temporibus necessitatibus, consectetur reiciendis recusandae id, dolorum quaerat, vero pariatur. Ratione!",
-  skills: ["Javascript", "React", "Node.js", "Python", "AWS", "Docker"],
+    "我是一名人工智能专业本科生，研究方向主要包括计算机视觉、大语言模型、智能体系统与深度学习。目前专注于文档图像处理、AI Agent以及机器学习系统开发，曾以第一作者身份发表计算机视觉方向论文，并在多个Kaggle竞赛中获得银牌成绩。",
+
+  skills: [
+    "Python",
+    "LangGraph"
+  ],
+
   projects: [
     {
-      name: "AI Dev Roundup Newsletter",
+      name: "DocRepairNet —— 文档图像阴影去除网络",
       description:
-        "One concise email. Five minutes. Every Tuesday. Essential AI news & trends, production-ready libraries, powerful AI tools, and real-world code examples",
-      link: "https://aidevroundup.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "提出ASMG-DARN文档阴影去除框架，通过自适应阴影掩码生成模块与文档感知细化模块，实现复杂阴影环境下的文档恢复。论文发表于ICIC 2026（CCF-C类会议，Oral，一作）。",
+      link:
+        "https://github.com/HuangZeLinCute/DocMaskRefine",
+      skills: [
+        "PyTorch",
+        "Computer Vision",
+        "Transformer",
+        "Attention",
+      ],
     },
+
     {
-      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
+      name: "AutoEdit —— 长视频智能切片Agent",
       description:
-        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
-      link: "https://fullstackextensions.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "基于LangGraph构建的多智能体视频处理系统，实现视频理解、语音识别、内容分析、自动剪辑、字幕生成以及视频渲染。",
+      link:
+        "https://github.com/HuangZeLinCute/auto_edit",
+      skills: [
+        "LangGraph",
+        "LLM Agent",
+        "FastAPI",
+        "Whisper",
+        "FFmpeg",
+      ],
     },
+
     {
-      name: "ExtensionKit",
+      name: "校园舆情分析与可视化平台",
       description:
-        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
-      link: "https://extensionkit.io/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "基于Kafka、Flink、Spring Boot和Vue构建的实时舆情分析平台，实现数据采集、流式计算、情感分析和可视化展示。",
+      link:
+        "https://www.bilibili.com/video/BV1Sr421g7Yc/",
+      skills: [
+        "Spring Boot",
+        "Vue",
+        "Kafka",
+        "Flink",
+        "NLP",
+      ],
+    },
+
+    {
+      name: "Kaggle竞赛项目合集",
+      description:
+        "参与多个Kaggle人工智能竞赛，在大语言模型推理、三维医学图像分割、低资源机器翻译和组合优化任务中取得银牌成绩。",
+      link:
+        "https://www.kaggle.com/blueshyy",
+      skills: [
+        "LLM",
+        "Machine Learning",
+        "Optimization",
+      ],
     },
   ],
+
+
   experience: [
     {
-      company: "Tech Company",
-      title: "Senior Software Engineer",
-      dateRange: "Jan 2022 - Present",
+      company: "科研经历",
+      title:
+        "计算机视觉研究",
+      dateRange:
+        "2025 - 至今",
       bullets: [
-        "Led development of microservices architecture serving 1M+ users",
-        "Reduced API response times by 40% through optimization",
-        "Mentored team of 5 junior developers",
+        "提出ASMG-DARN文档阴影去除网络，将阴影检测与图像恢复任务进行解耦。",
+        "以第一作者身份发表论文《ASMG-DARN: Adaptive Shadow Mask Generation and Document-Aware Refinement Network for Document Shadow Removal》。",
+        "在RDD和Kligler数据集上取得优于基线方法的实验结果。",
       ],
     },
+
     {
-      company: "Startup Inc",
-      title: "Full Stack Developer",
-      dateRange: "Jun 2020 - Dec 2021",
+      company: "Kaggle竞赛",
+      title:
+        "机器学习竞赛参与者",
+      dateRange:
+        "2025 - 至今",
       bullets: [
-        "Built and launched MVP product from scratch using React and Node.js",
-        "Implemented CI/CD pipeline reducing deployment time by 60%",
-        "Collaborated with product team to define technical requirements",
+        "获得多项Kaggle银牌成绩。",
+        "AI Mathematical Olympiad - Progress Prize 1：全球排名18/1161。",
+        "涉及LLM推理、3D医学图像分割、机器翻译以及组合优化等方向。",
       ],
     },
+
     {
-      company: "Digital Agency",
-      title: "Frontend Developer",
-      dateRange: "Aug 2018 - May 2020",
+      company: "个人项目",
+      title:
+        "人工智能系统开发",
+      dateRange:
+        "2024 - 至今",
       bullets: [
-        "Developed responsive web applications for 20+ clients",
-        "Improved site performance scores by 35% on average",
-        "Introduced modern JavaScript frameworks to legacy codebases",
+        "开发多个人工智能应用，包括智能视频编辑Agent、实时舆情分析系统等。",
+        "熟悉PyTorch、FastAPI、LangGraph以及大模型应用开发流程。",
       ],
     },
   ],
+
+
   education: [
     {
-      school: "University Name",
-      degree: "Bachelor of Science in Computer Science",
-      dateRange: "2014 - 2018",
+      school:
+        "广东白云学院",
+      degree:
+        "人工智能专业 本科",
+      dateRange:
+        "2022 - 至今",
       achievements: [
-        "Graduated Magna Cum Laude with 3.8 GPA",
-        "Dean's List all semesters",
-        "President of Computer Science Club",
-      ],
-    },
-    {
-      school: "Online Platform",
-      degree: "Full Stack Development Certificate",
-      dateRange: "2019",
-      achievements: [
-        "Completed 500+ hours of coursework",
-        "Built 10+ portfolio projects",
-        "Specialized in React and Node.js",
+        "主要学习人工智能、机器学习、深度学习以及计算机视觉相关课程。",
+        "研究方向包括文档智能、大语言模型和智能体系统。",
       ],
     },
   ],
