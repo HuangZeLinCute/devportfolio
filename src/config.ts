@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "黄泽霖",
-  title: "人工智能研究者 | 算法工程师",
+  title: "人工智能研究者",
   description:
     "黄泽霖的个人作品集，展示人工智能、计算机视觉、大语言模型与智能系统相关研究和项目。",
   accentColor: "#2563eb",
@@ -127,7 +127,7 @@ export const siteConfig = {
       degree:
         "人工智能专业 本科",
       dateRange:
-        "2022 - 至今",
+        "",
       achievements: [
         "主要学习人工智能、机器学习、深度学习以及计算机视觉相关课程。",
         "研究方向包括文档智能、大语言模型和智能体系统。",
