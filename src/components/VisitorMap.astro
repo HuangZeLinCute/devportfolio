@@ -1,10 +1,9 @@
 ---
 /**
- * VisitorMap —— 点阵世界地图（放在页脚）
+ * VisitorMap —— 点阵世界地图 + 访客统计（整体放在页脚）
  *
- * 只负责地图本身：SVG、匿名说明、以及拉取/写入访客数据并点亮国家的脚本。
- * 访问数字（#visit-total / #visit-regions）在 Visitors.astro 里，脚本按 id 查找，
- * 两者在同一页面上，位置无所谓。
+ * 这是一整块：统计数字、世界地图、匿名说明，以及拉取/写入访客数据并点亮国家的脚本。
+ * 原本数字在一个独立的 Visitors 板块里，按用户要求把那块删掉、数字并到这里。
  *
  * 地图是构建期预生成的：world-atlas 的 countries-110m TopoJSON 栅格化为 3° 点阵，
  * 编码成 base64 位图存在 src/data/world-map.json，见 tools/gen-world-map.py。
@@ -55,13 +54,37 @@ const landDots = (() => {
 })();
 ---
 
-<div class="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-gray-200">
-  <div class="flex items-baseline gap-3 mb-4 sm:mb-5">
+<div
+  id="visitors"
+  class="mt-10 sm:mt-12 pt-8 sm:pt-10 border-t border-gray-200"
+>
+  <div
+    class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4 mb-5 sm:mb-6"
+  >
     <span
       class="text-xs sm:text-sm font-medium uppercase tracking-widest text-gray-400"
     >
       Visitor Map
     </span>
+
+    <div class="flex flex-wrap items-baseline gap-x-8 gap-y-3">
+      <div class="flex items-baseline gap-1.5">
+        <span
+          id="visit-total"
+          class="text-2xl sm:text-3xl font-bold tabular-nums"
+          style={`color: ${siteConfig.accentColor}`}>—</span
+        >
+        <span class="text-xs sm:text-sm text-gray-500">次访问</span>
+      </div>
+      <div class="flex items-baseline gap-1.5">
+        <span
+          id="visit-regions"
+          class="text-2xl sm:text-3xl font-bold tabular-nums text-gray-900"
+          >—</span
+        >
+        <span class="text-xs sm:text-sm text-gray-500">个国家和地区</span>
+      </div>
+    </div>
   </div>
 
   <svg
