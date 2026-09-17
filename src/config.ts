@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "黄泽霖",
-  title: "人工智能研究者",
+  title: "Kaggle Expert",
   description:
     "黄泽霖的个人作品集，展示人工智能、计算机视觉、大语言模型与智能系统相关研究和项目。",
   accentColor: "#2563eb",
@@ -46,6 +46,21 @@ export const siteConfig = {
         "FastAPI",
         "Whisper",
         "FFmpeg",
+      ],
+    },
+
+    {
+      name: "CourtMind —— 羽毛球比赛视频智能分析平台",
+      description:
+        "基于React与FastAPI构建的羽毛球比赛视频分析平台。通过球场标定、人体姿态估计与羽毛球轨迹追踪，实现Rally自动切分、击球统计与比赛报告生成，并支持基于比赛结构化数据的AI对局问答，可在回答中直接回看对应视频片段。",
+      link:
+        "https://github.com/HuangZeLinCute/CourtMind",
+      skills: [
+        "PyTorch",
+        "FastAPI",
+        "React",
+        "Computer Vision",
+        "LLM",
       ],
     },
 
@@ -103,34 +118,6 @@ export const siteConfig = {
         "获得多项Kaggle银牌成绩。",
         "AI Mathematical Olympiad - Progress Prize 1：全球排名18/1161。",
         "涉及LLM推理、3D医学图像分割、机器翻译以及组合优化等方向。",
-      ],
-    },
-
-    {
-      company: "个人项目",
-      title:
-        "人工智能系统开发",
-      dateRange:
-        "2024 - 至今",
-      bullets: [
-        "开发多个人工智能应用，包括智能视频编辑Agent、实时舆情分析系统等。",
-        "熟悉PyTorch、FastAPI、LangGraph以及大模型应用开发流程。",
-      ],
-    },
-  ],
-
-
-  education: [
-    {
-      school:
-        "广东白云学院",
-      degree:
-        "人工智能专业 本科",
-      dateRange:
-        "",
-      achievements: [
-        "主要学习人工智能、机器学习、深度学习以及计算机视觉相关课程。",
-        "研究方向包括文档智能、大语言模型和智能体系统。",
       ],
     },
   ],
