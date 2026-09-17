@@ -1,0 +1,368 @@
+---
+/**
+ * Visitors —— 访客记录 + 世界地图
+ *
+ * 设计说明：
+ * - 本站是纯静态站点（GitHub Pages），没有后端，所以访客数据放在公开的匿名 KV 服务上。
+ * - 地图是构建期生成的：由 world-atlas 的 countries-110m TopoJSON 栅格化为 3° 点阵，
+ *   编码成 base64 位图存在 src/data/world-map.json 里，构建时还原成 SVG 路径。
+ * - 陆地脚印用一个 <path> 画出：每行把连续的陆地格子合并成一条线段，
+ *   配合 stroke-dasharray（点 0.01 / 间隔 2.99，正好等于格子间距 3）和
+ *   stroke-linecap="round" 渲染成一排圆点。比逐格输出 <circle> 省掉 1700 多个 DOM 节点。
+ */
+import mapData from "../data/world-map.json";
+import { siteConfig } from "../config";
+
+const { ncol, nrow, lat0, step, mask, centroids } = mapData;
+
+// ---- 解码 base64 陆地掩码 ----
+const buf = Buffer.from(mask, "base64");
+const isLand = (r: number, c: number) => {
+  const i = r * ncol + c;
+  return (buf[i >> 3] >> (7 - (i & 7))) & 1;
+};
+
+// ---- 合并每行连续陆地，生成点阵路径 ----
+// 坐标系：viewBox 0 0 360 144，x = lon + 180，y = 84 - lat，1 单位 = 1 度
+const DASH = step - 0.01;
+let landPath = "";
+for (let r = 0; r < nrow; r++) {
+  const y = (r + 0.5) * step;
+  let c = 0;
+  while (c < ncol) {
+    if (!isLand(r, c)) {
+      c++;
+      continue;
+    }
+    let end = c;
+    while (end + 1 < ncol && isLand(r, end + 1)) end++;
+    const x0 = (c + 0.5) * step;
+    const len = (end - c) * step + 0.01; // n 个格子 = n 个圆点
+    landPath += `M${x0.toFixed(2)} ${y.toFixed(2)}h${len.toFixed(2)}`;
+    c = end + 1;
+  }
+}
+
+const landDots = (() => {
+  let n = 0;
+  for (let r = 0; r < nrow; r++) for (let c = 0; c < ncol; c++) if (isLand(r, c)) n++;
+  return n;
+})();
+---
+
+<section id="visitors" class="p-8 sm:p-12 md:p-16 lg:p-24">
+  <div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+      <div class="lg:col-span-4">
+        <h2
+          class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900"
+        >
+          Visitors
+        </h2>
+        <div
+          class="w-[75px] h-[5px] mt-2 rounded-full"
+          style={`background-color: ${siteConfig.accentColor}`}
+        >
+        </div>
+        <p class="mt-6 text-base sm:text-lg leading-relaxed text-gray-500">
+          地图上的每一个亮点，都是一次来自远方的到访。
+        </p>
+      </div>
+
+      <div class="lg:col-span-8">
+        <div
+          class="bg-gray-50 rounded-xl sm:rounded-2xl border border-gray-200 p-4 sm:p-6 md:p-8"
+        >
+          <!-- 数字 -->
+          <div class="flex flex-wrap items-baseline gap-x-8 gap-y-3">
+            <div class="flex items-baseline gap-2">
+              <span
+                id="visit-total"
+                class="text-3xl sm:text-4xl font-bold tabular-nums"
+                style={`color: ${siteConfig.accentColor}`}>—</span
+              >
+              <span class="text-sm sm:text-base text-gray-500">次访问</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span
+                id="visit-regions"
+                class="text-3xl sm:text-4xl font-bold tabular-nums text-gray-900"
+                >—</span
+              >
+              <span class="text-sm sm:text-base text-gray-500"
+                >个国家和地区</span
+              >
+            </div>
+          </div>
+
+          <!-- 地图 -->
+          <div class="mt-6 sm:mt-8">
+            <svg
+              id="visitor-map"
+              viewBox="0 0 360 144"
+              class="w-full h-auto"
+              role="img"
+              aria-label={`访客来源世界地图，共 ${landDots} 个陆地点`}
+            >
+              <path
+                id="land"
+                d={landPath}
+                fill="none"
+                class="text-gray-300"
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                stroke-dasharray={`0.01 ${DASH}`}
+              />
+              <g id="visitor-dots"></g>
+            </svg>
+          </div>
+
+          <p class="mt-5 text-xs leading-relaxed text-gray-400">
+            匿名统计：仅记录访客所在国家/地区，不采集 IP、设备或任何可识别个人信息。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script
+  type="application/json"
+  id="visitor-config"
+  set:html={JSON.stringify({ accent: siteConfig.accentColor, centroids })}
+/>
+
+<script>
+  // ------------------------------------------------------------------
+  // 数据源：公开匿名 KV（无需注册）。若要更换服务，只需改 STORE 里两个函数。
+  // ------------------------------------------------------------------
+  const APP_KEY = "yg2u5sb4"; // 匿名生成的命名空间，非敏感凭据
+  const RECORD = "site-visits";
+  const STORE_BASE = "https://keyvalue.immanuel.co/api/KeyVal";
+
+  const CONFIG: { accent: string; centroids: Record<string, [number, number]> } =
+    JSON.parse(
+      document.getElementById("visitor-config")?.textContent || "{}",
+    );
+  const CENTROIDS = CONFIG.centroids || {};
+  const ACCENT = CONFIG.accent || "#2563eb";
+  const CACHE_MS = 3 * 60 * 1000;
+
+  type Counts = Record<string, number>;
+
+  const GEO_APIS: Array<{ url: string; pick: (d: any) => string }> = [
+    { url: "https://api.country.is/", pick: (d) => d?.country },
+    { url: "https://ipwho.is/", pick: (d) => d?.country_code },
+    { url: "https://freeipapi.com/api/json", pick: (d) => d?.countryCode },
+  ];
+
+  const getJSON = async (url: string, ms = 6000) => {
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), ms);
+    try {
+      const r = await fetch(url, { signal: ac.signal, cache: "no-store" });
+      if (!r.ok) throw new Error(String(r.status));
+      return await r.json();
+    } finally {
+      clearTimeout(t);
+    }
+  };
+
+  const parse = (s: unknown): Counts => {
+    const out: Counts = {};
+    if (typeof s !== "string") return out;
+    for (const part of s.split(",")) {
+      const [k, v] = part.split("=");
+      if (!k || v === undefined) continue;
+      const n = parseInt(v, 10);
+      if (k.trim() && Number.isFinite(n)) out[k.trim()] = n;
+    }
+    return out;
+  };
+
+  const serialize = (o: Counts) =>
+    Object.entries(o)
+      .map(([k, v]) => `${k}=${v}`)
+      .join(",");
+
+  const readCounts = async (): Promise<Counts> => {
+    const r = await fetch(`${STORE_BASE}/GetValue/${APP_KEY}/${RECORD}`, {
+      cache: "no-store",
+    });
+    if (!r.ok) throw new Error(String(r.status));
+    let text = await r.text();
+    try {
+      text = JSON.parse(text);
+    } catch {
+      /* 服务返回裸字符串时忽略 */
+    }
+    return parse(text);
+  };
+
+  const writeCounts = async (counts: Counts) => {
+    const value = encodeURIComponent(serialize(counts));
+    await fetch(`${STORE_BASE}/UpdateValue/${APP_KEY}/${RECORD}/${value}`, {
+      method: "POST",
+    });
+  };
+
+  const detectRegion = async (): Promise<string> => {
+    for (const api of GEO_APIS) {
+      try {
+        const code = api.pick(await getJSON(api.url));
+        if (code && /^[A-Za-z]{2}$/.test(code)) return code.toUpperCase();
+      } catch {
+        /* 换下一个源 */
+      }
+    }
+    return "";
+  };
+
+  // ---------------------------- 渲染 ----------------------------
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const dotsGroup = document.getElementById("visitor-dots")!;
+
+  const draw = (counts: Counts, mine: string) => {
+    const entries = Object.entries(counts).filter(([cc]) => CENTROIDS[cc]);
+    const max = Math.max(1, ...entries.map(([, n]) => n));
+    const scale = Math.log(max + 1);
+
+    dotsGroup.textContent = "";
+    entries
+      .sort((a, b) => a[1] - b[1])
+      .forEach(([cc, n], i) => {
+        const [lon, lat] = CENTROIDS[cc];
+        const cx = lon + 180;
+        const cy = 84 - lat;
+        const t = Math.log(n + 1) / scale; // 0..1，对数缩放避免小数值被淹没
+        const r = 1.15 + t * 1.85;
+        const isMine = cc === mine;
+
+        const halo = document.createElementNS(SVGNS, "circle");
+        halo.setAttribute("cx", String(cx));
+        halo.setAttribute("cy", String(cy));
+        halo.setAttribute("r", (r * (isMine ? 3.2 : 2.4)).toFixed(2));
+        halo.setAttribute("fill", ACCENT);
+        halo.setAttribute("opacity", isMine ? "0.22" : "0.14");
+        halo.classList.add("visitor-halo");
+        if (isMine) halo.classList.add("is-mine");
+
+        const dot = document.createElementNS(SVGNS, "circle");
+        dot.setAttribute("cx", String(cx));
+        dot.setAttribute("cy", String(cy));
+        dot.setAttribute("r", r.toFixed(2));
+        dot.setAttribute("fill", ACCENT);
+        dot.classList.add("visitor-dot");
+        if (isMine) dot.classList.add("is-mine");
+        dot.style.animationDelay = `${Math.min(i * 28, 900)}ms`;
+
+        const title = document.createElementNS(SVGNS, "title");
+        title.textContent = `${n} 次访问${isMine ? "（你在这里）" : ""}`;
+        dot.appendChild(title);
+
+        dotsGroup.append(halo, dot);
+      });
+  };
+
+  const setText = (id: string, v: string | number) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = String(v);
+  };
+
+  // ---------------------------- 主流程 ----------------------------
+  const main = async () => {
+    const cachedRaw = sessionStorage.getItem("visitor-counts");
+    const cachedAt = Number(sessionStorage.getItem("visitor-counts-at") || 0);
+    const fresh = Date.now() - cachedAt < CACHE_MS;
+
+    let mine = sessionStorage.getItem("visitor-region") || "";
+
+    // 先画缓存，避免白屏
+    if (cachedRaw) {
+      const cached = parse(cachedRaw);
+      draw(cached, mine);
+      const total = Object.values(cached).reduce((a, b) => a + b, 0);
+      setText("visit-total", total);
+      setText("visit-regions", Object.keys(cached).length);
+    }
+
+    try {
+      let counts = fresh && cachedRaw ? parse(cachedRaw) : await readCounts();
+
+      if (!fresh) {
+        if (!mine) {
+          mine = await detectRegion();
+          if (mine) sessionStorage.setItem("visitor-region", mine);
+        }
+        // 同一次会话只计一次，避免刷新把数字刷上去
+        if (mine && !sessionStorage.getItem("visitor-counted")) {
+          counts[mine] = (counts[mine] || 0) + 1;
+          sessionStorage.setItem("visitor-counted", "1");
+          await writeCounts(counts);
+        }
+        sessionStorage.setItem("visitor-counts", serialize(counts));
+        sessionStorage.setItem("visitor-counts-at", String(Date.now()));
+      }
+
+      draw(counts, mine);
+      setText(
+        "visit-total",
+        Object.values(counts).reduce((a, b) => a + b, 0),
+      );
+      setText("visit-regions", Object.keys(counts).length);
+    } catch {
+      // 服务不可用时保留缓存或占位符，页面其余部分不受影响
+      if (!cachedRaw) {
+        setText("visit-total", "—");
+        setText("visit-regions", "—");
+      }
+    }
+  };
+
+  main();
+</script>
+
+<style is:global>
+  .visitor-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: visitor-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  }
+  .visitor-halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: visitor-breathe 3.4s ease-in-out infinite;
+  }
+  .visitor-dot.is-mine,
+  .visitor-halo.is-mine {
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  @keyframes visitor-pop {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  @keyframes visitor-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.28);
+      opacity: 0.45;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .visitor-dot,
+    .visitor-halo {
+      animation: none;
+    }
+  }
+</style>
