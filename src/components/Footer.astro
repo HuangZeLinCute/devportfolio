@@ -1,9 +1,6 @@
 ---
 import { siteConfig } from "../config";
 import VisitorMap from "./VisitorMap.astro";
-
-const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
-const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
 ---
 
 <footer class="relative bg-gray-50 border-t border-gray-200">
@@ -71,48 +68,8 @@ const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
         </div>
       </div>
 
-      <div class="hidden md:block flex flex-col md:items-end gap-4">
-        <nav class="flex gap-x-8">
-          <a
-            href="#about"
-            class="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-            >About</a
-          >
-          {
-            hasProjects && (
-              <a
-                href="#projects"
-                class="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Projects
-              </a>
-            )
-          }
-          {
-            hasExperience && (
-              <a
-                href="#experience"
-                class="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Experience
-              </a>
-            )
-          }
-          <a
-            href="#visitors"
-            class="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            Visitors
-          </a>
-        </nav>
-        <p class="text-sm text-gray-500">
-          © {new Date().getFullYear()}
-          {siteConfig.name}. All rights reserved.
-        </p>
-      </div>
+      <VisitorMap />
     </div>
-
-    <VisitorMap />
   </div>
 
   <!-- Decorative pattern -->
