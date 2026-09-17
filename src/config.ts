@@ -65,21 +65,6 @@ export const siteConfig = {
     },
 
     {
-      name: "校园舆情分析与可视化平台",
-      description:
-        "基于Kafka、Flink、Spring Boot和Vue构建的实时舆情分析平台，实现数据采集、流式计算、情感分析和可视化展示。",
-      link:
-        "https://www.bilibili.com/video/BV1Sr421g7Yc/",
-      skills: [
-        "Spring Boot",
-        "Vue",
-        "Kafka",
-        "Flink",
-        "NLP",
-      ],
-    },
-
-    {
       name: "Kaggle竞赛项目合集",
       description:
         "参与多个Kaggle人工智能竞赛，在大语言模型推理、三维医学图像分割、低资源机器翻译和组合优化任务中取得银牌成绩。",
