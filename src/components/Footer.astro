@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "../config";
+import VisitorMap from "./VisitorMap.astro";
 
 const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
 const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
@@ -110,6 +111,8 @@ const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
         </p>
       </div>
     </div>
+
+    <VisitorMap />
   </div>
 
   <!-- Decorative pattern -->
