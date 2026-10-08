@@ -110,8 +110,21 @@ const landDots = (() => {
   // 数据源：公开匿名 KV（无需注册）。若要更换服务，只需改 STORE 里两个函数。
   // ------------------------------------------------------------------
   const APP_KEY = "yg2u5sb4"; // 匿名生成的命名空间，非敏感凭据
-  const RECORD = "site-visits";
   const STORE_BASE = "https://keyvalue.immanuel.co/api/KeyVal";
+
+  // 分片存储：该 KV 服务对 URL 长度有硬限制（解码后约 280 字符，对应 value
+  // 约 200 字符），39 个国家的全量写回会 400。按国家代码首字母分 3 片存放。
+  const SHARDS: Array<{ key: string; lo: string; hi: string }> = [
+    { key: "site-visits-1", lo: "A", hi: "F" },
+    { key: "site-visits-2", lo: "G", hi: "N" },
+    { key: "site-visits-3", lo: "O", hi: "Z" },
+  ];
+
+  const shardKeyOf = (cc: string) =>
+    (
+      SHARDS.find((s) => cc[0] >= s.lo && cc[0] <= s.hi) ||
+      SHARDS[SHARDS.length - 1]
+    ).key;
 
   const CONFIG: { accent: string; centroids: Record<string, [number, number]> } =
     JSON.parse(document.getElementById("visitor-config")?.textContent || "{}");
@@ -157,24 +170,42 @@ const landDots = (() => {
       .join(",");
 
   const readCounts = async (): Promise<Counts> => {
-    const r = await fetch(`${STORE_BASE}/GetValue/${APP_KEY}/${RECORD}`, {
-      cache: "no-store",
-    });
-    if (!r.ok) throw new Error(String(r.status));
-    let text = await r.text();
-    try {
-      text = JSON.parse(text);
-    } catch {
-      /* 服务返回裸字符串时忽略 */
-    }
-    return parse(text);
+    const merged: Counts = {};
+    await Promise.all(
+      SHARDS.map(async ({ key }) => {
+        const r = await fetch(`${STORE_BASE}/GetValue/${APP_KEY}/${key}`, {
+          cache: "no-store",
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        let text = await r.text();
+        try {
+          text = JSON.parse(text);
+        } catch {
+          /* 服务返回裸字符串时忽略 */
+        }
+        Object.assign(merged, parse(text));
+      }),
+    );
+    return merged;
   };
 
   const writeCounts = async (counts: Counts) => {
-    const value = encodeURIComponent(serialize(counts));
-    await fetch(`${STORE_BASE}/UpdateValue/${APP_KEY}/${RECORD}/${value}`, {
-      method: "POST",
-    });
+    const byShard: Record<string, string[]> = {};
+    for (const { key } of SHARDS) byShard[key] = [];
+    for (const [cc, n] of Object.entries(counts)) {
+      byShard[shardKeyOf(cc)].push(`${cc}=${n}`);
+    }
+    await Promise.all(
+      Object.entries(byShard)
+        .filter(([, items]) => items.length > 0)
+        .map(async ([key, items]) => {
+          // = 与 , 是 URL 路径段合法字符，不编码可避免撑长 URL 触发服务端长度限制
+          await fetch(
+            `${STORE_BASE}/UpdateValue/${APP_KEY}/${key}/${items.join(",")}`,
+            { method: "POST" },
+          );
+        }),
+    );
   };
 
   const detectRegion = async (): Promise<string> => {

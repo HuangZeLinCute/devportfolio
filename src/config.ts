@@ -12,40 +12,23 @@ export const siteConfig = {
   },
 
   aboutMe:
-    "我是一名人工智能专业本科生，研究方向主要包括计算机视觉、大语言模型、智能体系统与深度学习。目前专注于文档图像处理、AI Agent以及机器学习系统开发，曾以第一作者身份发表计算机视觉方向论文，并在多个Kaggle竞赛中获得银牌成绩。",
-
-  skills: [
-    "Python",
-    "LangGraph"
-  ],
+    "我是一名 AI 工程师/研究者，关注如何让模型真正读懂文档、让 Agent 可靠地完成任务。研究与实践覆盖计算机视觉、大语言模型和智能体系统，既做算法研究（第一作者论文），也做系统开发与竞赛实战。",
+    skills: [
+          ],
 
   projects: [
     {
-      name: "DocRepairNet —— 文档图像阴影去除网络",
+      name: "AX & AX Crew —— Rust 分布式 AI 智能体运行时与控制平面",
       description:
-        "提出ASMG-DARN文档阴影去除框架，通过自适应阴影掩码生成模块与文档感知细化模块，实现复杂阴影环境下的文档恢复。论文发表于ICIC 2026（CCF-C类会议，Oral，一作）。",
+        "AX 是一个基于 Rust 编写、可运行于任意机器的极速 AI 终端智能体，本地优先、即开即用，支持 MCP、Agent Skills 与按需加载；AX Crew 是与其配套开发的控制平面，用于跨机器的连接、编排与管理，支持任务 DAG 调度、跨设备委派与自动化例行任务。两者共同构成一套自研的分布式多智能体基础设施。",
       link:
-        "https://github.com/HuangZeLinCute/DocMaskRefine",
+        "https://github.com/Axium-Labs",
       skills: [
-        "PyTorch",
-        "Computer Vision",
-        "Transformer",
-        "Attention",
-      ],
-    },
-
-    {
-      name: "AutoEdit —— 长视频智能切片Agent",
-      description:
-        "基于LangGraph构建的多智能体视频处理系统，实现视频理解、语音识别、内容分析、自动剪辑、字幕生成以及视频渲染。",
-      link:
-        "https://github.com/HuangZeLinCute/auto_edit",
-      skills: [
-        "LangGraph",
+        "Rust",
         "LLM Agent",
-        "FastAPI",
-        "Whisper",
-        "FFmpeg",
+        "MCP",
+        "Multi-Agent Orchestration",
+        "Distributed Systems",
       ],
     },
 
@@ -63,46 +46,61 @@ export const siteConfig = {
         "LLM",
       ],
     },
+  ],
 
+  publications: [
     {
-      name: "Kaggle竞赛项目合集",
+      title:
+        "ASMG-DARN: Adaptive Shadow Mask Generation and Document-Aware Refinement Network for Document Shadow Removal",
+      venue: "ICIC 2026（CCF-C 类会议，Oral）",
+      authors: "黄泽霖（第一作者）",
+      year: "2026",
       description:
-        "参与多个Kaggle人工智能竞赛，在大语言模型推理、三维医学图像分割、低资源机器翻译和组合优化任务中取得银牌成绩。",
+        "提出自适应阴影掩码生成（ASMG）与文档感知细化（DARN）两阶段框架，将阴影检测与图像恢复任务解耦，在 RDD 与 Kligler 数据集上取得优于基线方法的结果。",
       link:
-        "https://www.kaggle.com/blueshyy",
-      skills: [
-        "LLM",
-        "Machine Learning",
-        "Optimization",
-      ],
+        "https://github.com/HuangZeLinCute/DocMaskRefine",
     },
   ],
 
 
   experience: [
     {
-      company: "科研经历",
-      title:
-        "计算机视觉研究",
-      dateRange:
-        "2025 - 至今",
+      company: "Kaggle · Featured Code Competition",
+      title: "AI Mathematical Olympiad - Progress Prize 1",
+      dateRange: "2025",
       bullets: [
-        "提出ASMG-DARN文档阴影去除网络，将阴影检测与图像恢复任务进行解耦。",
-        "以第一作者身份发表论文《ASMG-DARN: Adaptive Shadow Mask Generation and Document-Aware Refinement Network for Document Shadow Removal》。",
-        "在RDD和Kligler数据集上取得优于基线方法的实验结果。",
+        "全球排名 18 / 1161 支队伍",
+        "利用人工智能模型求解国家级数学奥林匹克挑战题",
       ],
     },
 
     {
-      company: "Kaggle竞赛",
-      title:
-        "机器学习竞赛参与者",
-      dateRange:
-        "2025 - 至今",
+      company: "Kaggle · Featured Code Competition",
+      title: "Santa 2025 - Christmas Tree Packing Challenge",
+      dateRange: "2026",
       bullets: [
-        "获得多项Kaggle银牌成绩。",
-        "AI Mathematical Olympiad - Progress Prize 1：全球排名18/1161。",
-        "涉及LLM推理、3D医学图像分割、机器翻译以及组合优化等方向。",
+        "全球排名 23 / 3357 支队伍",
+        "圣诞树装箱组合优化问题求解",
+      ],
+    },
+
+    {
+      company: "Kaggle · Featured Code Competition",
+      title: "Deep Past Challenge - Translate Akkadian to English",
+      dateRange: "2026",
+      bullets: [
+        "全球排名 57 / 2674 支队伍",
+        "古亚述语楔形文字到英文的机器翻译",
+      ],
+    },
+
+    {
+      company: "Kaggle · Research Code Competition",
+      title: "Vesuvius Challenge - Surface Detection",
+      dateRange: "2026",
+      bullets: [
+        "全球排名 57 / 1391 支队伍",
+        "构建模型实现古卷轴的虚拟展开",
       ],
     },
   ],

@@ -2,6 +2,8 @@
 import { siteConfig } from "../config";
 
 const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
+const hasPublications =
+  siteConfig.publications && siteConfig.publications.length > 0;
 const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
 ---
 
@@ -32,13 +34,25 @@ const hasExperience = siteConfig.experience && siteConfig.experience.length > 0;
         )
       }
       {
+        hasPublications && (
+          <li>
+            <a
+              href="#publications"
+              class="text-gray-700 hover:text-black transition-colors font-medium"
+            >
+              Publications
+            </a>
+          </li>
+        )
+      }
+      {
         hasExperience && (
           <li>
             <a
-              href="#experience"
+              href="#kaggle"
               class="text-gray-700 hover:text-black transition-colors font-medium"
             >
-              Experience
+              Kaggle
             </a>
           </li>
         )
