@@ -20,7 +20,7 @@ export const siteConfig = {
     {
       name: "AX & AX Crew —— Rust 分布式 AI 智能体运行时与控制平面",
       description:
-        "AX 是一个基于 Rust 编写、可运行于任意机器的极速 AI 终端智能体，本地优先、即开即用，支持 MCP、Agent Skills 与按需加载；AX Crew 是与其配套开发的控制平面，用于跨机器的连接、编排与管理，支持任务 DAG 调度、跨设备委派与自动化例行任务。两者共同构成一套自研的分布式多智能体基础设施。",
+        "AX 是一个基于 Rust 编写、可运行于任意机器的极速 AI 终端智能体，本地优先、即开即用，支持 MCP、Agent Skills、Mod 与按需加载；AX Crew 是与其配套开发的控制平面，用于跨机器的连接、编排与管理，支持任务 DAG 调度、跨设备委派与自动化例行任务。",
       link:
         "https://github.com/Axium-Labs/AX",
       skills: [
