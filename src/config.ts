@@ -12,7 +12,7 @@ export const siteConfig = {
   },
 
   aboutMe:
-    "我是一名 AI 工程师/研究者，关注如何让模型真正读懂文档、让 Agent 可靠地完成任务。研究与实践覆盖计算机视觉、大语言模型和智能体系统，既做算法研究（第一作者论文），也做系统开发与竞赛实战。",
+    "我是一名 AI 研究者，关注如何让模型真正读懂文档、让 Agent 可靠地完成任务。研究与实践覆盖计算机视觉、大语言模型和智能体系统，既做算法研究（第一作者论文），也做系统开发与竞赛实战。",
     skills: [
           ],
 
@@ -22,7 +22,7 @@ export const siteConfig = {
       description:
         "AX 是一个基于 Rust 编写、可运行于任意机器的极速 AI 终端智能体，本地优先、即开即用，支持 MCP、Agent Skills 与按需加载；AX Crew 是与其配套开发的控制平面，用于跨机器的连接、编排与管理，支持任务 DAG 调度、跨设备委派与自动化例行任务。两者共同构成一套自研的分布式多智能体基础设施。",
       link:
-        "https://github.com/Axium-Labs",
+        "https://github.com/Axium-Labs/AX",
       skills: [
         "Rust",
         "LLM Agent",
